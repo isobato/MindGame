@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MindGame</title>
+    <script type= "text/javascript" src="mindgame.js"></script>
+    <link rel="stylesheet" href="theme/default/theme.css">
+
+</head>
+<body>
+<div id="MindGameWrapper">
+	<div id="MGMenu">
+		<div class="MGStart">
+			<div class="MGMenuWrapper">
+
+				<h1>New Game</h1>
+				<audio preload="auto"><source src="theme/default/radiobtn.mp3" type="audio/mpeg">></source></audio>
+				<p id="MGStartNameLabel">Enter your name:</p>
+
+				<input type="text" id="MGStartName" value="Player1"/>
+				
+				<div class="rbDivWrapper" style="width:40px; height:40px; display: none" >
+					<input type="radio" id="rbEasy" class="MGStart" value="easy" checked="true" onclick="rbClick()" name="level">
+					<label for="rbEasy" class="rbLabel rbL1" style="width: 40px; height: 40px;"></label>
+				</div>
+				<div class="rbDivWrapper" style="width:60px; height:60px; display: none" >
+					<input type="radio" id="rbMedium" class="MGStart" value="medium" checked="false" onclick="rbClick()" name="level">
+					<label for="rbMedium" class="rbLabel rbL2" style="width: 60px; height: 60px;"></label>
+				</div>
+				<div class="rbDivWrapper" style="width:90px; height:90px; display: none" >
+					<input type="radio" id="rbHard" class="MGStart" value="hard" checked="false" onclick="rbClick()" name="level">
+					<label for="rbHard" class="rbLabel rbL3" style="width: 90px; height: 90px;"></label>
+				</div>
+				
+
+				<button class="MGMenuNext" onclick="gameMindStart();">Next</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="MindGameScore" style="visibility: hidden;" onmouseover="MindGameScore_Move()">
+		<span id="MGscore">0</span>
+		<span id="MGtimer">0sec</span>
+		<span id="MGclicks">0</span>
+	</div>
+    <div id="MindGame" style="visibility: hidden;"></div>
+    
+    	
+    </div>
+
+</div>
+
+</body>
+</html>
