@@ -154,6 +154,7 @@ Theme.prototype.getImageBackSrc = function()
 }
 function GameManager()
 {
+	this.LevelsDictionary = {4:"easy", 6:"medium", 8:"hard"}
 	this.PlayerName = GameManager.getPlayerName();
 	this.Level = GameManager.getLevel();
 	this.MindGame = new MindGame(this.PlayerName, this.Level);
@@ -182,7 +183,7 @@ GameManager.prototype.draw = function()
 		for(var j=1; j<=this.Level; j++)
 		{
 			var e = document.createElement('div');
-			e.className = "MindGameNode diagonal click";
+			e.className = "MindGameNode diagonal click " + this.LevelsDictionary[this.Level];
 			e.id = ""+i+"-"+j+"";
 			e.setAttribute('onclick', 'GameManager.clicked(event);');
 			
@@ -243,7 +244,7 @@ function gameMindStart(){
  
 function timer_click(){
 	document.getElementById("MGscore").innerHTML = TheGame.MindGame.Score;
-	document.getElementById("MGtimer").innerHTML = ++TheGame.MindGame.Timer + " sec";
+	document.getElementById("MGtimer").innerHTML = ++TheGame.MindGame.Timer + "sec";
 	document.getElementById("MGclicks").innerHTML = TheGame.MindGame.Clicks;
 }
 

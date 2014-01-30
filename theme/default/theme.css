@@ -216,37 +216,39 @@ label.rbLabel {
 }
 
 #MindGameScore{
-	background-color: rgba(34,34,34,0.5);
+	max-width: 667px;
+	width: 90vmin;
+	height: 3vmin;
+	background-color: rgba(34,34,34,0.68);
 	border: 2px solid;
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 1%;
+	position: fixed;
+	right: 10px;
+	left: 10px;
+	padding: 5px;
 	border-radius: 5px;
-	z-index: 2000;
 	box-shadow: 0 2px 2px rgba(0,0,0,0.9);
+	margin: 1% auto;
 }
 #MGscore{
-	font-size: 2em;
+	width: 33%;
+	font-size: 3vmin;
 	color: greenyellow;
-	float:left;
+	float: left;
 }
 #MGtimer
 {
 	float: left;
-	text-align: right;
-	width: 50%;
-	height: 50%;
+	text-align: center;
+	width: 33%;
 	color: greenyellow;
-	font-size: 1.1em;
+	font-size: 3vmin;
 }
 #MGclicks{
 	float: left;
 	text-align: right;
-	width: 50%;
-	height: 50%;
+	width: 33%;
 	color: greenyellow;
-	font-size: 1.1em;
+	font-size: 3vmin;
 }
 
 	#MindGame{
@@ -256,18 +258,23 @@ label.rbLabel {
         left:0;
         top:0;
         */
+        width: 90vmin;
+        height: 90vmin;
+        max-height: 667px;
+        max-width: 667px;
         position: fixed;
 		top: 10px;
 		bottom: 10px;
 		left: 10px;
 		right: 10px;
-		background: rgba(0,0,0,0.68);
-
+		background: rgba(34,34,34,0.68);
+		margin: 5% auto;
+		padding: 1%;	
+		border-radius: 5px;
+		border: 2px solid;
     }
 .MindGameNode {
 		float: left;
-		width: 12.5%;
-		height: 12.5%;
 		margin: 0px;
 		position: relative;
 		font-size: .8em;
@@ -276,6 +283,10 @@ label.rbLabel {
 		-moz-perspective: 600px;
 		perspective: 600px;
 	}
+	.MindGameNode.easy{	width:25%; height: 25%}
+	.MindGameNode.medium{ width: 16.66%; height: 16.66% ;}
+	.MindGameNode.hard{ width: 12.5%; height:12.5%;}
+
 	.MindGameNode .front {
 		float: none;
 		position: absolute;
