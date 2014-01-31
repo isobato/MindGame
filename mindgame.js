@@ -1,8 +1,7 @@
-///<playerName></playerName>
-///<level>{4, 6, 8}</level>
 function MindGame(playerName, level)
 {
 	this.PlayerName = playerName;
+	this.Level = level;
 
 	this.GameGrid = MindGame.scrambleArray(level);
 
@@ -10,7 +9,7 @@ function MindGame(playerName, level)
 	this.Clicks = 0;
 	this.Score = 0;
 
-	this.Timer = 0;  //Initiate StopWatch
+	this.Timer = 0;
 	this.clickQueue = new Array();
 }
 
@@ -88,7 +87,7 @@ MindGame.prototype.score = function()
 	//Exponencijalna funkcija a^x sa osnovom 0<a<1 daje mogućnost jedinstvene score tabele za sve nivoe igre.
 	//Pravi pravilnu raspodelu bodova po nivou igre i proteklom vremenu. 
 	//Što je nivo igre veći, veći je dodatak na skor; Što je proteklo vreme veće, dodatak na skor je manji
-	this.Score += (this.level/10)^this.Timer
+	this.Score += ((this.Level/10)^(this.Timer/10))*100
 
 	//Additionaly increment number of guessed nodes
 	this.hideGuessedPair();
@@ -103,10 +102,24 @@ MindGame.prototype.hideGuessedPair = function()
     this.clickQueue[0].onclick = null;
     this.clickQueue[1].style.opacity = 0;
     this.clickQueue[1].onclick = null;
+
 }
 MindGame.prototype.theEnd = function(){
 	clearInterval(TheTimeInterval);
+	timer_click();	//Collect score and show last 
+	
+	//GameNOdes are invisible and they are taking space. This frees that space
+	var gameNodes = document.getElementById("MindGame").getElementsByClassName("MindGameNode")
+	for(i=0; i<gameNodes.length;i++) gameNodes[i].style.display="none";;
 
+	var stovariste = new MindGameStorage(this.Level);
+	var data = {"player": this.PlayerName, "score": this.Score, "timer": this.Timer, "clicks": this.Clicks};
+	// data["player"] = this.PlayerName;
+	// data["score"] = this.Score;
+	// data["time"] = this.Timer;
+	// data["clicks"] = this.Clicks;
+
+	var rank = stovariste.checkRank(data);
 }
 
 function Theme(themeName, level, totalImages)
@@ -227,6 +240,7 @@ function gameMindStart(){
 		if(!eMGStart.classList.contains("page"))	
 		{
 			eMGStart.classList.add("next");
+			document.getElementById("MGname").innerHTML = ePlayerName.value;
 			ePlayerName.style.display = "none";
 			ePlayerNameLabel.innerHTML = "Please select level";
 			eMGStart.classList.add("page");
@@ -248,14 +262,114 @@ function timer_click(){
 	document.getElementById("MGclicks").innerHTML = TheGame.MindGame.Clicks;
 }
 
-function rbClick()
-{
+function rbClick(){
 	var aud = document.getElementsByTagName("audio")[0];
 	aud.play();
 }
-
-function MindGameScore_Move(){
-	var mgs = document.getElementById("MindGameScore")
-	mgs.right = mgs.right = 0?-1:0;
-	
+///
+///ViewScoreTable class
+///
+function ViewScoreTable(){
+	this.Tbl = document.getElementById("MindGame");
+	this.DollySheep = document.getElementById("MindGameScore");
 }
+//Simple draw method without animation
+ViewScoreTable.prototype.draw = function(newONE){
+	var lastONE = this.Tbl.getElementsByClassName("Tbl")[10];
+		
+	lastONE.style.opacity = "0";
+	lastONE.style.display = "none";
+	newONE.style.display = "block";
+}
+ViewScoreTable.prototype.postMessage = function(new_data_rank, new_data, table){
+	if( 0 == new_data_rank )	//Does not have local storage
+	{}
+	else if( 0 < new_data_rank && new_data_rank < 11)	//local storage ON and rank good
+	{
+		var newNODE = null;
+		for(i=1; i<=10; i++)
+		{
+			var e = this.DollySheep.cloneNode(true);
+			if(i==new_data_rank)
+			{
+				newNODE = this.DollySheep.cloneNode(true);
+				newNODE.style.display = "none"; newNODE.style.background = "blue";
+				newNODE.className="Tbl";
+				newNODE.children.namedItem("MGname").innerHTML = new_data.player;
+				newNODE.children.namedItem("MGscore").innerHTML = new_data.score;
+				newNODE.children.namedItem("MGtimer").innerHTML = new_data.timer;
+				newNODE.children.namedItem("MGclicks").innerHTML = new_data.clicks;
+				this.Tbl.appendChild(newNODE);
+			}
+			e.className="Tbl";
+			e.children.namedItem("MGname").innerHTML = table[i].player;
+			e.children.namedItem("MGscore").innerHTML = table[i].score;
+			e.children.namedItem("MGtimer").innerHTML = table[i].timer;
+			e.children.namedItem("MGclicks").innerHTML = table[i].clicks;
+			this.Tbl.appendChild(e);
+		}
+		this.draw(newNODE);
+	}
+	else 	//Local storage ON and bad rank
+	{}
+}
+///
+///MindGameStorage class
+///
+function MindGameStorage(level){
+	var stringl = {4:"easy", 6:"medium", 8:"hard"};
+	this.LevelS = stringl[level];
+
+	this.Observer = new ViewScoreTable();
+	this.Table = null;
+	this.NewDataRank = null;
+	this.NewData = null;
+}
+MindGameStorage.HasHTML5Storage = function(){
+	try {   return 'localStorage' in window && window['localStorage'] !== null;  } 
+	catch (e) { return false; };
+}
+MindGameStorage.prototype.readStorage = function()
+{
+	this.Table = {
+		1:{"player":"Player1", "score":10000, "timer":100, "clicks":100, "fb":true, "tw":true},
+		2:{"player":"Player2", "score":9000, "timer":200, "clicks":200, "fb":false, "tw":false},
+		3:{"player":"Player3", "score":8000, "timer":300, "clicks":300, "fb":false, "tw":false},
+		4:{"player":"Player4", "score":7000, "timer":400, "clicks":400, "fb":false, "tw":false},
+		5:{"player":"Player5", "score":6000, "timer":500, "clicks":500, "fb":false, "tw":false},
+		6:{"player":"Player6", "score":5000, "timer":600, "clicks":600, "fb":false, "tw":false},
+		6:{"player":"Player6", "score":4000, "timer":600, "clicks":600, "fb":false, "tw":false},
+		7:{"player":"Player7", "score":3000, "timer":700, "clicks":700, "fb":false, "tw":false},
+		8:{"player":"Player8", "score":2000, "timer":800, "clicks":800, "fb":false, "tw":false},
+		9:{"player":"Player9", "score":1000, "timer":900, "clicks":900, "fb":false, "tw":false},
+		10:{"player":"Player10", "score":100, "timer":1000, "clicks":1000, "fb":false, "tw":false},
+	}
+}
+MindGameStorage.prototype.writeStorage = function()
+{
+
+}
+MindGameStorage.prototype.checkRank = function(new_data)
+{
+	if( ! MindGameStorage.HasHTML5Storage() ) return this.alertObserverNoStorage(); //returns 0;
+	this.readStorage();
+
+	var rank = 1;	//not ranked
+	while(rank < 11 && new_data.score < this.Table[rank].score) rank++;
+	if(rank < 11)
+	{
+		this.NewDataRank = rank;
+		this.NewData = new_data;
+
+		this.writeStorage();
+		this.alertObserverRanked();
+	}
+	else
+	{
+		this.alertObserverNotRanked();
+	}
+	return rank;	
+}
+MindGameStorage.prototype.alertObserverNoStorage = function(){	this.Observer.postMessage(0); return 0; }//returns # > 10 
+MindGameStorage.prototype.alertObserverRanked = function(){ 	this.Observer.postMessage(this.NewDataRank, this.NewData, this.Table);	}
+MindGameStorage.prototype.alertObserverNotRanked = function(){	this.Observer.postMessage(11); }//returns # > 10 
