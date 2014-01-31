@@ -431,3 +431,29 @@ label.rbLabel {
 			 -moz-transform: rotate3d(45,45,0,-30deg);
 						transform: rotate3d(45,45,0,-30deg);
 	}
+
+#MindGame p{
+	margin: 0;
+	font-size: 3vw;
+	float: left;
+	display: block;
+	width: 50%;
+	height: 13vmin;
+	padding-left: 3%;
+}
+.buttonPost{
+	width: 13vmin;
+	height: 13vmin;
+	float: right;
+	border:none;
+	-webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+}
+.buttonPost:hover{
+	width: 12vmin;
+	height: 12vmin;
+}
+#fb{background: url('fb.png');background-size: cover;}
+#tw{background: url('tw.png');background-size: cover;}
