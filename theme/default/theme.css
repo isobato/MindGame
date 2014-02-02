@@ -1,26 +1,4 @@
 /*@import url(http://fonts.googleapis.com/css?family=Bitter:400,700);*/
-@font-face {
-  font-family: "Essays 1743";
-  src: url("f/Essays1743.eot?") format("eot"), url("f/Essays1743.woff") format("woff"), url("f/Essays1743.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Essays 1743";
-  font-weight: bold;
-  src: url("f/Essays1743-bold.eot?") format("eot"), url("f/Essays1743-bold.woff") format("woff"), url("f/Essays1743-bold.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Essays 1743";
-  font-style: italic;
-  src: url("f/Essays1743-italic.eot?") format("eot"), url("f/Essays1743-italic.woff") format("woff"), url("f/Essays1743-italic.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Essays 1743";
-  font-style: italic;
-  font-weight: bold;
-  src: url("f/Essays1743-bold-italic.eot?") format("eot"), url("f/Essays1743-bold-italic.woff") format("woff"), url("f/Essays1743-bold-italic.ttf") format("truetype");
-}
-
-
 body{
 	margin: 0px;
 	padding: 0px;
@@ -248,19 +226,26 @@ label.rbLabel {
 	/*position: fixed;*/
 	right: 10px;
 	left: 10px;
-	padding: 5px;
+	padding: 5px 1px;
 	border-radius: 5px;
 	box-shadow: 0 2px 2px rgba(0,0,0,0.9);
 	margin: 1% auto;
+	-webkit-transition:padding 300ms ease-in-out;
+    -moz-transition:padding 300ms ease-in-out;
+    -o-transition:padding 300ms ease-in-out;
+    transition:padding 300ms ease-in-out;
 }
+#MindGameScore.sortingAnimation{padding:2vmin 0;}
+#MindGameScore.currentScore{background-color: blue;}
+
 .MGscore
 {
-	width: 25%;
+	width: 15%;
 	font-size: 3vmin;
 	color: greenyellow;
 	float: left;
 }
-#MGname{}
+#MGname{width:55%;}
 #MGscore{text-align: center;}
 #MGtimer{text-align: center;}
 #MGclicks{text-align: right;}
@@ -297,6 +282,7 @@ label.rbLabel {
 		-moz-perspective: 600px;
 		perspective: 600px;
 	}
+
 	.MindGameNode.easy{	width:25%; height: 25%}
 	.MindGameNode.medium{ width: 16.66%; height: 16.66% ;}
 	.MindGameNode.hard{ width: 12.5%; height:12.5%;}
