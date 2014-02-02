@@ -9,6 +9,9 @@ function MindGame(playerName, level)
 	this.Clicks = 0;
 	this.Score = 0;
 
+	//"ct" - current timer stamp
+	// 2pair guessed within 1 second bounus is 1013 etc.
+	this.Bonus3 = {"ct":0, 1:1013, 2:503, 3:101};
 	this.Timer = 0;
 	this.clickQueue = new Array();
 }
@@ -84,10 +87,14 @@ MindGame.prototype.hideElement = function(e)
 
 MindGame.prototype.score = function()
 {
-	this.Score += (this.Level*100)-this.Timer
+	var secPassed = this.Timer - this.Bonus3.ct;
+	var isBonus = secPassed < 4 ? secPassed : 0;
+	this.Score += 100 + (isBonus>0 ? this.Bonus3[isBonus] : 0);
 
 	//Additionaly increment number of guessed nodes
 	this.hideGuessedPair();
+
+	this.Bonus3.ct = this.Timer;
 	
 	if( this.NumberOfGuessedNodes == Object.keys(this.GameGrid).length ) this.theEnd();
 }
