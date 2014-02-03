@@ -265,10 +265,31 @@ function ViewScoreTable()
 	this.DollySheep = document.getElementById("MindGameScore");
 }
 ViewScoreTable.postFb = function(){
-	alert("You have shared your result on Facebook!");
+	FB.ui(
+    {
+            method: 'feed',
+            name: 'Igra memorije',
+            caption: 'Igraj se memorije',
+			description:( '' + TheGame.MindGame.Score + 'poena za ' + TheGame.MindGame.Timer + ' sekuni sa ' +TheGame.MindGame.Clicks+' klikova!'),
+            link: 'http://isobato.github.io/MindGame/',
+            picture: 'http://isobato.github.io/MindGame/theme/logo.jpg'
+    },
+    function(response){
+    	if (response && response.post_id) {
+    		alert("Vaš rezultat ima status: Shared");
+    	}
+    	else
+    	{
+    		alert("Niste uspeli da podelite svoj rezultat");
+    	}
+    }
+    );
 }
 ViewScoreTable.postTw = function(){
-	alert("Your result has been shared on Twitter!");
+    var url = 'https://twitter.com/intent/tweet?text='
+    url += 'I played memory game and score ' + TheGame.MindGame.Score + ' in ' + TheGame.MindGame.Clicks + ' clicks within ' + TheGame.MindGame.Timer + ' sec!! ';
+    url += 'The memory game is on this link: http://isobato.github.io/MindGame/';
+    window.open(url, "Twit my score",'height=290,width=320');
 }
 ViewScoreTable.setChildren = function(e, data, rank) {
 	e.className="Tbl";
@@ -308,8 +329,8 @@ ViewScoreTable.prototype.postMessage = function(new_data_rank, new_data, table)
 	}
 	else 	//Local storage ON and bad rank
 	{}
-	var buttonFb = document.createElement("button"); buttonFb.id="fb"; buttonFb.className = "buttonPost"; buttonFb.onclick = "ViewScoreTable.postFb();";
-	var buttonTw = document.createElement("button"); buttonTw.id="tw"; buttonTw.className = "buttonPost"; buttonTw.onclick = "ViewScoreTable.postTw();";
+	var buttonFb = document.createElement("button"); buttonFb.id="fb"; buttonFb.className = "buttonPost"; buttonFb.setAttribute('onclick', 'ViewScoreTable.postFb()');
+	var buttonTw = document.createElement("button"); buttonTw.id="tw"; buttonTw.className = "buttonPost"; buttonTw.setAttribute('onclick', 'ViewScoreTable.postTw()');
 	var pElement = document.createElement("p"); pElement.innerHTML = "Share your result on <br> Facebook and Twitter";
 
 	this.Tbl.appendChild(buttonFb);
