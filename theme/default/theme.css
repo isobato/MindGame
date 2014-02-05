@@ -2,7 +2,7 @@
 body{
 	margin: 0px;
 	padding: 0px;
-	background: #948d02 url('bg.jpg') no-repeat fixed center;
+	background: #948d02 url('bg.jpg') no-repeat fixed;
 	background-size: cover;
 	/*font: 700 14px 'Bitter';*/
 	font: italic x-large/1.75 "Essays 1743", "Marker Felt", "Kristen ITC", "Viner Hand ITC", "Lucida Handwriting", Amienne, Boopee, "Segoe Print", "Times New Roman", serif;

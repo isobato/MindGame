@@ -97,6 +97,7 @@ GameManager.prototype.draw = function()
 GameManager.prototype.showElement = function(e)
 {
 	if(e.childNodes.length>1)   return;
+	Theme.Sounds["open"].play();
 	var e1=document.createElement('img');
 	e1.src = this.Theme.getImageSrc(this.MindGame.GameGrid[e.id]);
 	e1.className = "back";
@@ -106,11 +107,13 @@ GameManager.prototype.showElement = function(e)
 }
 GameManager.prototype.hideElement = function(e)
 {
+	Theme.Sounds["close"].play();
 	e.classList.remove("reveal");
 	e.childNodes[1].remove();
 }
 GameManager.prototype.hideGuessedPair = function(e1, e2)
 {
+	Theme.Sounds["guess"].play();
 	e1.style.opacity = 0;
     e1.onclick = null;
     e2.style.opacity = 0;
