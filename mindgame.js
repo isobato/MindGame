@@ -296,7 +296,7 @@ ViewScoreTable.postFb = function(){
             method: 'feed',
             name: 'Igra memorije',
             caption: 'Igraj se memorije',
-			description:( '' + TheGame.MindGame.Score + 'poena za ' + TheGame.MindGame.Timer + ' sekuni sa ' +TheGame.MindGame.Clicks+' klikova!'),
+			description:( '' + Game.Manager.TheGame.MindGame.Score + 'poena za ' + Game.Manager.TheGame.MindGame.Timer + ' sekuni sa ' +Game.Manager.TheGame.MindGame.Clicks+' klikova!'),
             link: 'http://isobato.github.io/MindGame/',
             picture: 'http://isobato.github.io/MindGame/theme/logo.jpg'
     },
@@ -313,7 +313,7 @@ ViewScoreTable.postFb = function(){
 }
 ViewScoreTable.postTw = function(){
     var url = 'https://twitter.com/intent/tweet?text='
-    url += 'I played memory game and score ' + TheGame.MindGame.Score + ' in ' + TheGame.MindGame.Clicks + ' clicks within ' + TheGame.MindGame.Timer + ' sec!! ';
+    url += 'I played memory game and score ' + Game.Manager.TheGame.MindGame.Score + ' in ' + Game.Manager.TheGame.MindGame.Clicks + ' clicks within ' + Game.Manager.TheGame.MindGame.Timer + ' sec!! ';
     url += 'The memory game is on this link: http://isobato.github.io/MindGame/';
     window.open(url, "Twit my score",'height=290,width=320');
 }
