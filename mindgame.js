@@ -212,7 +212,8 @@ MindGame.prototype.alertObserverHideGuessedPair = function(){	this.GameManagerEv
 MindGame.prototype.theEnd = function()
 {
 	clearInterval(TheTimeInterval);
-	GameManager.timer_tick();	//Collect score and show last 
+	//Alert Observer to collect score one last time
+	this.GameManagerEventObserver.timer_tick();
 	
 	//GameNOdes are invisible and they are taking space. This frees that space
 	var gameNodes = document.getElementById("MindGame").getElementsByClassName("MindGameNode")
