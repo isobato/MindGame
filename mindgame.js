@@ -58,7 +58,7 @@ GameManager.gameStart = function(){
 	    
 	    	//Initiate the game
 	    	GameManager.TheGame = new GameManager;
-	    	TheTimeInterval = window.setInterval( function() { GameManager.timer_tick(); }, 1000);
+	    	TheTimeInterval = window.setInterval( function() { GameManager.TheGame.timer_tick(); }, 1000);
 		}
 	}
 GameManager.rbClick = function(){ Theme.Sounds["guess"].play(); }
@@ -69,10 +69,10 @@ GameManager.getLevel = function(){
 		if(document.getElementById("rbMedium").checked) return 6;
 		if(document.getElementById("rbHard").checked) return 8;
 	}
-GameManager.timer_tick = function(){
-		document.getElementById("MGscore").innerHTML = GameManager.TheGame.MindGame.Score;
-		document.getElementById("MGtimer").innerHTML = ++GameManager.TheGame.MindGame.Timer + "sec";
-		document.getElementById("MGclicks").innerHTML = GameManager.TheGame.MindGame.Clicks;
+GameManager.prototype.timer_tick = function(){
+		document.getElementById("MGscore").innerHTML = this.MindGame.Score;
+		document.getElementById("MGtimer").innerHTML = ++this.MindGame.Timer + "sec";
+		document.getElementById("MGclicks").innerHTML = this.MindGame.Clicks;
 	}
 
 GameManager.prototype.clicked = function(myEvent){	this.MindGame.clicked( myEvent ); }
