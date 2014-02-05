@@ -1,5 +1,130 @@
-function MindGame(playerName, level)
+GameManager.TheGame = null;
+GameManager.eMGMenu = null;
+GameManager.ePlayerName = null;
+GameManager.ePlayerNameLabel = null;
+GameManager.eMGStart = null;
+function GameManager()
 {
+	_this = this;
+	this.LevelsDictionary = {4:"easy", 6:"medium", 8:"hard"}
+	this.PlayerName = GameManager.getPlayerName();
+	this.Level = GameManager.getLevel();
+	this.MindGame = new MindGame(this.PlayerName, this.Level, this);
+	this.Theme = new Theme("default", this.Level, 24);
+	this.draw();
+
+}
+
+GameManager.isPage1 = function(){return !GameManager.eMGStart.classList.contains('page2');}
+GameManager.isPage1Complete = function() {
+		if(GameManager.ePlayerName.value == '')
+		{
+			GameManager.ePlayerNameLabel.innerHTML = "Please enter your name first";
+			return false;
+		}
+
+		return true;
+	}
+GameManager.showPage2 = function(){
+		GameManager.eMGStart.classList.add('next');		//50% animation
+		GameManager.ePlayerName.style.display = "none";
+		GameManager.ePlayerNameLabel.innerHTML = "Please select level";
+
+		document.getElementById("MGname").innerHTML = GameManager.ePlayerName.value;
+		Theme.loadSound();
+		
+		//show radio buttons on second page
+		var eRadioDivWrappers = document.getElementsByClassName("rbDivWrapper"); 
+		for(var i = 0; i<eRadioDivWrappers.length; i++) {eRadioDivWrappers[i].style.display="block";}
+	}
+GameManager.gameStart = function(){
+		GameManager.eMGMenu = document.getElementById("MGMenu");
+		GameManager.ePlayerName = document.getElementById("MGPlayerName");
+		GameManager.ePlayerNameLabel = document.getElementById("MGPlayerNameLabel");
+		GameManager.eMGStart = GameManager.eMGMenu.getElementsByClassName("MGStart")[0];
+
+		if( GameManager.isPage1() ){
+			if( GameManager.isPage1Complete() ){
+				GameManager.showPage2();
+				GameManager.eMGStart.classList.add("page2");	//another 50% of animation
+			}
+			return;
+		}
+		else{
+			//Page2 is showing, level selected and next button clicked
+			document.getElementById("MGMenu").style.visibility = "hidden";
+			document.getElementById("MindGameScore").style.visibility = "visible";
+			document.getElementById("MindGame").style.visibility = "visible";
+	    
+	    	//Initiate the game
+	    	GameManager.TheGame = new GameManager;
+	    	TheTimeInterval = window.setInterval( function() { GameManager.timer_tick(); }, 1000);
+		}
+	}
+GameManager.rbClick = function(){ Theme.Sounds["guess"].play(); }
+
+GameManager.getPlayerName = function(){ return document.getElementById("MGPlayerName").value; }
+GameManager.getLevel = function(){  
+		if(document.getElementById("rbEasy").checked) return 4;
+		if(document.getElementById("rbMedium").checked) return 6;
+		if(document.getElementById("rbHard").checked) return 8;
+	}
+GameManager.timer_tick = function(){
+		document.getElementById("MGscore").innerHTML = GameManager.TheGame.MindGame.Score;
+		document.getElementById("MGtimer").innerHTML = ++GameManager.TheGame.MindGame.Timer + "sec";
+		document.getElementById("MGclicks").innerHTML = GameManager.TheGame.MindGame.Clicks;
+	}
+
+GameManager.prototype.clicked = function(myEvent){	this.MindGame.clicked( myEvent ); }
+GameManager.prototype.draw = function()
+{
+	for(var i=1; i<=this.Level; i++)
+		for(var j=1; j<=this.Level; j++)
+		{
+			var e = document.createElement('div');
+			e.className = "MindGameNode diagonal click " + this.LevelsDictionary[this.Level];
+			e.id = ""+i+"-"+j+"";
+			e.onclick = function(){_this.clicked(this);};
+			
+			var e0=document.createElement('img');
+			e0.src = this.Theme.getImageBackSrc();
+			e0.className = "front";
+
+            document.getElementById("MindGame").appendChild(e);
+			e.appendChild(e0);
+		}
+}
+GameManager.prototype.showElement = function(e)
+{
+	if(e.childNodes.length>1)   return;
+	var e1=document.createElement('img');
+	e1.src = this.Theme.getImageSrc(this.MindGame.GameGrid[e.id]);
+	e1.className = "back";
+	
+	e.appendChild(e1);
+	e.classList.add("reveal");
+}
+GameManager.prototype.hideElement = function(e)
+{
+	e.classList.remove("reveal");
+	e.childNodes[1].remove();
+}
+GameManager.prototype.hideGuessedPair = function(e1, e2)
+{
+	e1.style.opacity = 0;
+    e1.onclick = null;
+    e2.style.opacity = 0;
+    e2.onclick = null;
+}
+
+
+function MindGame(playerName, level, observer)
+{
+	// this.EventHideElement = null;
+	// this.EventShowElement = null;
+	// this.EventHideGuessedPair = null;
+	this.GameManagerEventObserver = observer;
+
 	this.PlayerName = playerName;
 	this.Level = level;
 
@@ -15,29 +140,27 @@ function MindGame(playerName, level)
 	this.Timer = 0;
 	this.clickQueue = new Array();
 }
+MindGame.scrambleArray = function(level){
+		var grid = new Array(level^2);
+		//iniciate collection counter
+		var a = new Array();
+		for(var i=0; i<level; i++) a[i]=0;
 
-MindGame.scrambleArray = function(level)
-{
-	var grid = new Array(level^2);
-	//iniciate collection counter
-	var a = new Array();
-	for(var i=0; i<level; i++) a[i]=0;
+		//Randomly select r-numbers less then level value.
+		//Also count how many the same r you have and do not exceed 4 when level=4 or 6 when level=6, etc.
+		for(var i=1; i<=level; i++)
+			for( var j=1; j<=level; j++)
+			{
+				
+				do{ r = Math.floor(Math.random()*level); }
+				while(a[r]==level) //if there are already max allowed of this one, generate another
 
-	//Randomly select r-numbers less then level value.
-	//Also count how many the same r you have and do not exceed 4 when level=4 or 6 when level=6, etc.
-	for(var i=1; i<=level; i++)
-		for( var j=1; j<=level; j++)
-		{
-			
-			do{ r = Math.floor(Math.random()*level); }
-			while(a[r]==level) //if there are already max allowed of this one, generate another
+				a[r]++; //count how many this ones you've generated;
 
-			a[r]++; //count how many this ones you've generated;
-
-			grid[""+i+"-"+j+""]=r;
-		}   
-	return grid;
-}
+				grid[""+i+"-"+j+""]=r;
+			}   
+		return grid;
+	}
 
 ///<e> javascript event </e>
 MindGame.prototype.clicked = function(e)
@@ -46,12 +169,12 @@ MindGame.prototype.clicked = function(e)
 
 	this.Clicks += 1;
 	this.clickQueue.push(e);                                     //Register click in the queue
-	this.showElement(e);
+	this.alertObserverShowElement(e);
 
 	if(this.clickQueue.length > 1)
 	{															//Second click registred
 		if( this.clickQueue[0].id == this.clickQueue[1].id)
-			this.hideElement(this.clickQueue[0]);				//Same card clicked. Close it!
+			this.alertObserverHideElement(this.clickQueue[0]);				//Same card clicked. Close it!
 		else
 		{
 			if( this.GameGrid[this.clickQueue[0].id] === this.GameGrid[this.clickQueue[1].id] )
@@ -63,28 +186,12 @@ MindGame.prototype.clicked = function(e)
 MindGame.prototype.emptyQueue = function()
 {
 	try{
-		this.hideElement(this.clickQueue[0]); 
-		this.hideElement(this.clickQueue[1]);
+		this.alertObserverHideElement(this.clickQueue[0]); 
+		this.alertObserverHideElement(this.clickQueue[1]);
 	}
 	catch(ex){}
     this.clickQueue.length = 0;
 }
-MindGame.prototype.showElement = function(e)
-{
-	if(e.childNodes.length>1)   return;
-	var e1=document.createElement('img');
-	e1.src = TheGame.Theme.getImageSrc(TheGame.MindGame.GameGrid[e.id]);
-	e1.className = "back";
-
-	e.classList.add("reveal");
-	e.appendChild(e1);
-}
-MindGame.prototype.hideElement = function(e)
-{
-	e.classList.remove("reveal");
-	e.childNodes[1].remove();
-}
-
 MindGame.prototype.score = function()
 {
 	var secPassed = this.Timer - this.Bonus3.ct;
@@ -92,26 +199,20 @@ MindGame.prototype.score = function()
 	this.Score += 100 + (isBonus>0 ? this.Bonus3[isBonus] : 0);
 
 	//Additionaly increment number of guessed nodes
-	this.hideGuessedPair();
+	this.NumberOfGuessedNodes += 2;
+	this.alertObserverHideGuessedPair();
 
 	this.Bonus3.ct = this.Timer;
 	
 	if( this.NumberOfGuessedNodes == Object.keys(this.GameGrid).length ) this.theEnd();
 }
-
-MindGame.prototype.hideGuessedPair = function()
-{
-    this.NumberOfGuessedNodes += 2;
-    this.clickQueue[0].style.opacity = 0;
-    this.clickQueue[0].onclick = null;
-    this.clickQueue[1].style.opacity = 0;
-    this.clickQueue[1].onclick = null;
-
-}
+MindGame.prototype.alertObserverHideElement = function(e){	this.GameManagerEventObserver.hideElement(e);	}
+MindGame.prototype.alertObserverShowElement = function(e){	this.GameManagerEventObserver.showElement(e);	}
+MindGame.prototype.alertObserverHideGuessedPair = function(){	this.GameManagerEventObserver.hideGuessedPair(this.clickQueue[0], this.clickQueue[1]);	}
 MindGame.prototype.theEnd = function()
 {
 	clearInterval(TheTimeInterval);
-	timer_click();	//Collect score and show last 
+	GameManager.timer_tick();	//Collect score and show last 
 	
 	//GameNOdes are invisible and they are taking space. This frees that space
 	var gameNodes = document.getElementById("MindGame").getElementsByClassName("MindGameNode")
@@ -121,6 +222,9 @@ MindGame.prototype.theEnd = function()
 	var data = {"player": this.PlayerName, "score": this.Score, "timer": this.Timer, "clicks": this.Clicks};
 	var rank = stovariste.checkRank(data);
 }
+
+
+
 
 function Theme(themeName, level, totalImages)
 {
@@ -146,6 +250,15 @@ function Theme(themeName, level, totalImages)
 		this.Images[n].src = this.ThemeDirectory + "images/image_" + rnd + ".png"; //link file: "images_01.png"
 	}
 }
+Theme.Sounds = [];
+Theme.Directory = './theme/';
+
+Theme.loadSound = function(){
+	var audiosounds = {'open':0, 'close':0, 'guess':0};
+	var soundsDir = Theme.Directory + MindGameStorage.getTheme() + '/sounds/';
+	for(k in audiosounds)
+		Theme.Sounds[k] = new Audio(soundsDir + k + '.mp3');
+}
 /**
  * @param {string} index The string
  */
@@ -165,95 +278,7 @@ Theme.prototype.getImageBackSrc = function()
 {
 	return this.ThemeDirectory + "images/image_00.png";
 }
-function GameManager()
-{
-	this.LevelsDictionary = {4:"easy", 6:"medium", 8:"hard"}
-	this.PlayerName = GameManager.getPlayerName();
-	this.Level = GameManager.getLevel();
-	this.MindGame = new MindGame(this.PlayerName, this.Level);
-	this.Theme = new Theme("default", this.Level, 24);
-	this.draw();
-}
 
-var styleMindGameNode;
-var styleMindGame;
-
-GameManager.prototype.draw = function()
-{
-	for(var i=1; i<=this.Level; i++)
-		for(var j=1; j<=this.Level; j++)
-		{
-			var e = document.createElement('div');
-			e.className = "MindGameNode diagonal click " + this.LevelsDictionary[this.Level];
-			e.id = ""+i+"-"+j+"";
-			e.setAttribute('onclick', 'GameManager.clicked(event);');
-			
-			var e0=document.createElement('img');
-			e0.src = this.Theme.getImageBackSrc();
-			e0.className = "front";
-
-            document.getElementById("MindGame").appendChild(e);
-			e.appendChild(e0);
-		}
-}
-
-//static methods
-GameManager.getPlayerName = function(){ return document.getElementById("MGStartName").value; }
-GameManager.getLevel = function(){  
-	if(document.getElementById("rbEasy").checked) return 4;
-	if(document.getElementById("rbMedium").checked) return 6;
-	if(document.getElementById("rbHard").checked) return 8;
-}
-
-var TheGame;
-GameManager.clicked = function(myEvent)
-{
-	var e = myEvent.target;
-	while( !e.classList.contains("MindGameNode") ) e = e.parentNode;
-
-	TheGame.MindGame.clicked(e);
-}
-
-
-function gameMindStart(){
-	var eMGStart = (document.getElementById("MGMenu")).getElementsByClassName("MGStart")[0];
-	var ePlayerName = document.getElementById("MGStartName")
-	var ePlayerNameLabel = document.getElementById("MGStartNameLabel");
-	if(ePlayerName.value == "")
-	{
-		ePlayerNameLabel.innerHTML = "Enter your name first";
-		return;
-	}
-	else
-		if(!eMGStart.classList.contains("page"))	
-		{
-			eMGStart.classList.add("next");
-			document.getElementById("MGname").innerHTML = ePlayerName.value;
-			ePlayerName.style.display = "none";
-			ePlayerNameLabel.innerHTML = "Please select level";
-			eMGStart.classList.add("page");
-			var eRadioDivWrappers = document.getElementsByClassName("rbDivWrapper"); for(var i = 0; i<eRadioDivWrappers.length; i++) {eRadioDivWrappers[i].style.display="block";}
-			return;
-		}
-		
-	document.getElementById("MGMenu").style.visibility = "hidden";
-	document.getElementById("MindGameScore").style.visibility = "visible";
-	document.getElementById("MindGame").style.visibility = "visible";
-    TheGame = new GameManager;
-    TheTimeInterval = window.setInterval( function() { timer_click(); }, 1000);
-
-}
- 
-function timer_click(){
-	document.getElementById("MGscore").innerHTML = TheGame.MindGame.Score;
-	document.getElementById("MGtimer").innerHTML = ++TheGame.MindGame.Timer + "sec";
-	document.getElementById("MGclicks").innerHTML = TheGame.MindGame.Clicks;
-}
-
-function rbClick(){
-	var aud = document.getElementsByTagName("audio")[0];
-	aud.play();
-}
 ///
 ///ViewScoreTable class
 ///
@@ -371,7 +396,7 @@ MindGameStorage.read = function(level) {
 
 
 	while(	localStorage.getItem(level + "." + i + "." + firstkey)!==null && 
-			localStorage.getItem(level + "." + i + "." + firstkey)!=="undefined" )
+			localStorage.getItem(level + "." + i + "." + firstkey)!==undefined )
 	{
 		var r = MindGameStorage.newMGSrow();
 		for(key in r)
@@ -392,6 +417,14 @@ MindGameStorage.write = function(table, level) {
 		for(key in table[i])
 			localStorage[level + "." + i + "." + key] = table[i][key];
 	}
+}
+MindGameStorage.getTheme = function(){
+	var themeName = 'default';
+	if( MindGameStorage.HasHTML5Storage() ){
+		var t = localStorage["themeName"];
+		if( t !== null && t!==undefined ) themeName = t;
+	}
+	return themeName;
 }
 MindGameStorage.prototype.addAndRank = function(player, score, timer, clicks)
 {

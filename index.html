@@ -8,32 +8,48 @@
 
 </head>
 <body>
+<div id="fb-root"></div>
+<script>
+      window.fbAsyncInit = function() {
+          FB.init({
+              appId      : '1445160325701328',
+              status     : true,
+              xfbml      : true
+          });
+      };
+      (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/all.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+</script>
 <div id="MindGameWrapper">
 	<div id="MGMenu">
 		<div class="MGStart">
 			<div class="MGMenuWrapper">
 
 				<h1>New Game</h1>
-				<audio preload="auto"><source src="theme/default/radiobtn.mp3" type="audio/mpeg">></source></audio>
-				<p id="MGStartNameLabel">Enter your name:</p>
+				<p id="MGPlayerNameLabel">Enter your name:</p>
 
-				<input type="text" id="MGStartName" value="Player1"/>
+				<input type="text" id="MGPlayerName" value="Player1"/>
 				
 				<div class="rbDivWrapper" style="width:40px; height:40px; display: none" >
-					<input type="radio" id="rbEasy" class="MGStart" value="easy" checked="true" onclick="rbClick()" name="level">
+					<input type="radio" id="rbEasy" class="MGStart" value="easy" checked="true" onclick="GameManager.rbClick()" name="level">
 					<label for="rbEasy" class="rbLabel rbL1" style="width: 40px; height: 40px;"></label>
 				</div>
 				<div class="rbDivWrapper" style="width:60px; height:60px; display: none" >
-					<input type="radio" id="rbMedium" class="MGStart" value="medium" checked="false" onclick="rbClick()" name="level">
+					<input type="radio" id="rbMedium" class="MGStart" value="medium" onclick="GameManager.rbClick()" name="level">
 					<label for="rbMedium" class="rbLabel rbL2" style="width: 60px; height: 60px;"></label>
 				</div>
 				<div class="rbDivWrapper" style="width:90px; height:90px; display: none" >
-					<input type="radio" id="rbHard" class="MGStart" value="hard" checked="false" onclick="rbClick()" name="level">
+					<input type="radio" id="rbHard" class="MGStart" value="hard" onclick="GameManager.rbClick()" name="level">
 					<label for="rbHard" class="rbLabel rbL3" style="width: 90px; height: 90px;"></label>
 				</div>
 				
 
-				<button class="MGMenuNext" onclick="gameMindStart();">Next</button>
+				<button class="MGMenuNext" onclick="GameManager.gameStart();">Next</button>
 			</div>
 		</div>
 	</div>
