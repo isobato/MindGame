@@ -183,7 +183,7 @@ MindGame.prototype.clicked = function(e)
 			if( this.GameGrid[this.clickQueue[0].id] === this.GameGrid[this.clickQueue[1].id] )
 				this.score();									//Another card clicked. Guessed. Score it!
 		}
-		setTimeout(function(){this.emptyQueue();}.bind(this), 450);
+		setTimeout(function(){this.emptyQueue();}.bind(this), 400);
 	}
 }
 MindGame.prototype.emptyQueue = function()

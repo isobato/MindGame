@@ -2,8 +2,7 @@
 body{
 	margin: 0px;
 	padding: 0px;
-	background: #948d02 url('bg.jpg') no-repeat fixed;
-	background-size: cover;
+	background: #948d02 url('images/image_00.png') repeat;
 	/*font: 700 14px 'Bitter';*/
 	font: italic x-large/1.75 "Essays 1743", "Marker Felt", "Kristen ITC", "Viner Hand ITC", "Lucida Handwriting", Amienne, Boopee, "Segoe Print", "Times New Roman", serif;
 	line-height: 1;
@@ -33,9 +32,9 @@ h1 {
 }
 .MGStart{
 	margin: auto;
-	max-width: 260px;
+	max-width: 480px;
 	width: 99%;
-	max-height: 320px;
+	max-height: 512px;
 	height: 100%;
 	position: absolute;
 	left: 0;
@@ -107,8 +106,7 @@ h1 {
 #MGPlayerName
 {
 	width:94%;
-	line-height: 37px;
-	font:italic x-large/1.75 "Essays 1743", "Marker Felt", "Kristen ITC", "Viner Hand ITC", "Lucida Handwriting", Amienne, Boopee, "Segoe Print", "Times New Roman", serif;
+	font:italic xx-large/1.75 "Essays 1743", "Marker Felt", "Kristen ITC", "Viner Hand ITC", "Lucida Handwriting", Amienne, Boopee, "Segoe Print", "Times New Roman", serif;
 	margin: 2%;
 	border-radius: 5px;
 	background-color: #3b3824;
@@ -443,70 +441,3 @@ label.rbLabel {
 }
 #fb{background: url('fb.png');background-size: cover;}
 #tw{background: url('tw.png');background-size: cover;}
-
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
-	body{
-		background: #948d02 url('bg.mob.jpg') no-repeat fixed;
-	}
-/* Styles */
-}
-
-/* Smartphones (landscape) ----------- */
-@media only screen 
-and (min-width : 321px) {
-/* Styles */
-}
-
-/* Smartphones (portrait) ----------- */
-@media only screen 
-and (max-width : 320px) {
-	body{
-		background: #948d02 url('bg.mob.jpg') no-repeat fixed;
-	}
-/* Styles */
-}
-
-/* iPads (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) {
-/* Styles */
-}
-
-/* iPads (landscape) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : landscape) {
-/* Styles */
-}
-
-/* iPads (portrait) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait) {
-/* Styles */
-}
-
-/* Desktops and laptops ----------- */
-@media only screen 
-and (min-width : 1224px) {
-/* Styles */
-}
-
-/* Large screens ----------- */
-@media only screen 
-and (min-width : 1824px) {
-/* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media
-only screen and (-webkit-min-device-pixel-ratio : 1.5),
-only screen and (min-device-pixel-ratio : 1.5) {
-/* Styles */
-}
